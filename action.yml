@@ -1,0 +1,23 @@
+name: 'Authentication GCS'
+description: 'Authentication procedures for using the Terraform backend'
+inputs:
+  GCP_CREDENTIALS:
+    description: Authentication to access GCS
+    required: true
+  GCP_PROJECT:
+    description: Projects where GCS exists
+    required: true
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/checkout@v3
+  - id: auth
+    uses: google-github-actions/auth@v1
+    with:
+      credentials_json: ${{ inputs.GCP_CREDENTIALS }} # 각 프로젝트 별 credentials
+  - name: Set up Cloud SDK
+    uses: google-github-actions/setup-gcloud@v1
+
+  - name: Use gcloud CLI
+    shell: bash
+    run: gcloud config set project ${{ inputs.GCP_PROJECT }}  # google cloud storage check
